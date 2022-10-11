@@ -1,38 +1,55 @@
 const fs = require("fs");
 const inputData = fs.readFileSync("./test").toString().trim().split("\n");
 
-const testCase = [...inputData];
+class Stack {
+  _stack = [];
+  length = 0;
 
-testCase.shift();
+  push(a) {
+    this.length += 1;
+    this._stack.push(a);
+  }
+  pop() {
+    if (!this.length) return -1;
+    this.length -= 1;
+    return this._stack.pop();
+  }
+  size() {
+    return this.length;
+  }
+  top() {
+    return this.length ? this._stack[this.length - 1] : -1;
+  }
+  empty() {
+    return this.length ? 0 : 1;
+  }
+}
 
-const stack = [];
+const stack = new Stack();
+let answer = [];
 
-for (let i = 0; i < testCase.length; i++) {
-  const type = testCase[i];
-  console.log(stack);
+for (let i = 1; i < inputData.length; i++) {
+  const [type, value] = inputData[i].split(" ");
+
   switch (type) {
     case "top":
-      console.log(stack[stack.length - 1] || -1);
+      answer.push(stack.top());
       continue;
     case "size":
-      console.log(stack.length);
+      answer.push(stack.size());
       continue;
     case "empty":
-      console.log(stack.length ? 0 : 1);
+      answer.push(stack.empty());
       continue;
     case "pop": {
-      if (stack.length === 0) {
-        console.log(-1);
-        continue;
-      }
-      const a = stack.pop();
-      console.log(a);
+      answer.push(stack.pop());
       continue;
     }
-    default: {
-      const int = parseInt(type.split(" ")[1]);
-      stack.push(int);
-      continue;
+    case "push": {
+      stack.push(value);
     }
   }
 }
+
+//시간초과가 떠서 answer에 담고 한번에 console.log
+console.log(answer.join("\n"));
